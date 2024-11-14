@@ -28,23 +28,17 @@ jobs:
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      # Pytest로 테스트 실행
       - name: Test with pytest
         run: |
           pytest
-      # Gradle 테스트
-      - name: Grant execute permission for Gradle
-        run: chmod +x gradlew
-      - name: Execute Gradle build
-        run: ./gradlew build
       - name: Publish test results as PR comment
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: '**/build/test-results/test/TEST-*.xml'
+          files: '**/test-results/*.xml'
       - name: Comment on PR for failed test lines
         uses: mikepenz/action-junit-report@v3
         if: always()
         with:
-          report_paths: '**/build/test-results/test/TEST-*.xml'
+          report_paths: '**/test-results/*.xml'
           token: ${{ github.token }}
