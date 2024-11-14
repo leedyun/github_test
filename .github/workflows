@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest
+          pip install flake8 pytest pytest-junitxml
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Lint with flake8
         run: |
@@ -30,15 +30,16 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          pytest
+          pytest --junitxml=test-results/results.xml
       - name: Publish test results as PR comment
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: '**/test-results/*.xml'
+          files: 'test-results/results.xml'
+          check_name: 'Unit Tests Results'
       - name: Comment on PR for failed test lines
         uses: mikepenz/action-junit-report@v3
         if: always()
         with:
-          report_paths: '**/test-results/*.xml'
-          token: ${{ github.token }}
+          report_paths: 'test-results/results.xml'
+          token: ${{ secrets.GITHUB_TOKEN }}
