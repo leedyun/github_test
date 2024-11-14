@@ -42,4 +42,4 @@ jobs:
         if: always()
         with:
           report_paths: 'test-results/results.xml'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACTIONS_TOKEN }}
